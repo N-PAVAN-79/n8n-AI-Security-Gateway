@@ -14,19 +14,11 @@ An enterprise-grade, defense-in-depth API gateway built on **n8n** that sits bet
 ```mermaid
 graph TD
     A[User App / Chatbot] -->|POST Prompt| B(n8n Webhook Endpoint)
-    
-    sublayer1[Rule-Based Guard (0ms latency)]
-    B --> C{Matches Blacklisted Injection Words?}
+    B --> C{Blacklist Regex Match?}
     C -->|Yes| D[🚨 Block 403 & Discord Alert]
-    end
-
-    sublayer2[Semantic Guard LLM (Groq Llama-3)]
-    C -->|No| E[Groq AI Classifier Model]
+    C -->|No| E[Groq AI Classifier]
     E --> F{Outputs ATTACK?}
     F -->|Yes| D
-    end
-    
-    sublayer3[Target Execution]
     F -->|No| G[Target Primary LLM]
     G --> H[Return 200 OK Safe Response]
     H --> A
